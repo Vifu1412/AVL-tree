@@ -14,17 +14,15 @@ using namespace std;
 
 int main(void)
 {
-	int a,k;
-	char v;
-    AVLTree<int, char> x;
+	int a = 8;
+	char v[9] = { 'v', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
+	AVLTree<int, char> x;
 	//测试insert
-    cout<<"请输入创建AVL树节点数："<<endl;
-	cin>>a;
 	if(a>0){
 		cout<<"请输入key-value ："<<endl;
-		for(int i = 0; i < a; ++i){
-			cin>>k>>v;
-			x.insert(std::pair<int, char>(k, v));
+		for (int i = 1; i <= a; ++i) {
+
+			x.insert(std::pair<int, char>(i, v[i]));
 		}
 	}
 	cout<<"创建完成"<<endl;
@@ -42,19 +40,35 @@ int main(void)
 	cout<<"AVL树节点个数为："<<x.size()<<endl;
 	//测试find
 	cout<<"请输入查找节点的key"<<endl;
-	cin>>k;
-	std::pair<const int, char> *s = x.find(k);
+	std::pair<const int, char> *s = x.find(6);
 	if(s)
 	   cout <<"查找节点为："<< s->first << ' ' << s->second << endl;
 	else
 		cout<<"无此节点"<<endl;
 	//测试erase
 	cout<<"请输入删除节点的key"<<endl;
-	cin>>k;
-	x.erase(k);
+	x.erase(6);
 	cout<<"节点已删除"<<endl;
 	cout<<"升序输出："<<endl;
 	x.ascend();
 	cout<<"层次遍历："<<endl;
+	x.levelOrderOutput();
+	x.erase(1);
+	cout << "节点已删除" << endl;
+	cout << "升序输出：" << endl;
+	x.ascend();
+	cout << "层次遍历：" << endl;
+	x.levelOrderOutput();
+	x.erase(3);
+	cout << "节点已删除" << endl;
+	cout << "升序输出：" << endl;
+	x.ascend();
+	cout << "层次遍历：" << endl;
+	x.levelOrderOutput();
+	x.erase(2);
+	cout << "节点已删除" << endl;
+	cout << "升序输出：" << endl;
+	x.ascend();
+	cout << "层次遍历：" << endl;
 	x.levelOrderOutput();
 }

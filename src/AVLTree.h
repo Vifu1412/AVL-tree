@@ -11,7 +11,7 @@
 #include "bsTree.h"
 #include "linkedBinaryTree.cpp"
 
-
+//element结构定义，键值对和节点高度
 template<class K,class E>
 struct AVLTreeElement{
 	K key;
