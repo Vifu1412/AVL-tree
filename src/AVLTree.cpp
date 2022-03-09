@@ -196,6 +196,9 @@ binaryTreeNode<AVLTreeElement<K,E>>* AVLTree<K,E>::erase(binaryTreeNode<AVLTreeE
 			delete tmp;
 		}
 	}
+	if (t)
+		t->element.height = max(height(t->leftChild), height(t->rightChild))
+				+ 1;
 	return t;
 }
 
