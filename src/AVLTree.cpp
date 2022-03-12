@@ -23,6 +23,7 @@ template<class K,class E>
 void AVLTree<K,E>::ascend(){
 	this->inOrderOutput();
 }
+
 //查找函数，返回key为theKey的键值对
 template<class K,class E>
 std::pair<const K,E>* AVLTree<K,E>::find(const K& theKey) const{
@@ -44,11 +45,15 @@ int AVLTree<K,E>::max(int a,int b){
 	return a>b ? a : b;
 }
 //获取节点高度函数
-template<class K,class E>
-int AVLTree<K,E>::height(binaryTreeNode<AVLTreeElement<K,E>> *t){
-	if(t)
-		return t->element.height;
-	return 0;
+template<class K, class E>
+int AVLTree<K, E>::getHeight(binaryTreeNode<AVLTreeElement<K, E>> *t) {
+
+	if (t == NULL) {
+		return 0;
+	}
+	int leftHeight = getHeight(t->leftChild) + 1;
+	int rightHeight = getHeight(t->rightChild) + 1;
+	return leftHeight < rightHeight ? rightHeight : leftHeight;
 }
 //LL型调整函数
 template<class K,class E>
@@ -57,9 +62,6 @@ binaryTreeNode<AVLTreeElement<K,E>>* AVLTree<K,E>::LL_Rotation(binaryTreeNode<AV
 	t->leftChild = p->rightChild;							//L右孩子改为T左孩子
 	p->rightChild = t;										//T改为L右孩子
 
-	t->element.height = max(height(t->leftChild), height(t->rightChild)) + 1; //由下到上更改高度，除L、T外其他节点高度均未改变
-	p->element.height = max(height(p->leftChild),t->element.height) + 1;
-
 	return p;
 }
 template<class K,class E>
@@ -67,9 +69,6 @@ binaryTreeNode<AVLTreeElement<K,E>>* AVLTree<K,E>::RR_Rotation(binaryTreeNode<AV
 	binaryTreeNode<AVLTreeElement<K,E>> *p = t->rightChild;
 	t->rightChild = p->leftChild;
 	p->leftChild = t;
-
-	t->element.height = max(height(t->leftChild),height(t->rightChild)) + 1;
-	p->element.height = max(height(p->leftChild),t->element.height) + 1;
 
 	return p;
 }
@@ -99,13 +98,12 @@ binaryTreeNode<AVLTreeElement<K,E>>* AVLTree<K,E>::insert(binaryTreeNode<AVLTree
 		AVLTreeElement<K,E> newElement;
 		newElement.key = theDate.first;
 		newElement.value = theDate.second;
-		newElement.height = 0;
 		t = new binaryTreeNode<AVLTreeElement<K,E>> (newElement);
 		this->treeSize++;
 	}
 	else if (theDate.first < t->element.key) { //插入到t的左子树
 		t->leftChild = insert(t->leftChild,theDate);
-		if (height(t->leftChild) - height(t->rightChild) == 2) { //设最先失衡结点为T，失衡方向结点为t，新插入结点为n，
+		if (getHeight(t->leftChild) - getHeight(t->rightChild) == 2) { //设最先失衡结点为T，失衡方向结点为t，新插入结点为n，
 			if (theDate.first < t->leftChild->element.key)//若T与t大小关系和t与n大小关系一致，则为失衡方向单旋转，否则为双旋转。
 				t = LL_Rotation(t);
 			else
@@ -114,7 +112,7 @@ binaryTreeNode<AVLTreeElement<K,E>>* AVLTree<K,E>::insert(binaryTreeNode<AVLTree
 	}
 	else if(theDate.first > t->element.key){//插入到t的右子树
 		t->rightChild = insert(t->rightChild,theDate);
-		if(height(t->rightChild) - height(t->leftChild) == 2){
+		if (getHeight(t->rightChild) - getHeight(t->leftChild) == 2) {
 			if(theDate.first > t->rightChild->element.key)
 				t = RR_Rotation(t);
 			else
@@ -125,8 +123,6 @@ binaryTreeNode<AVLTreeElement<K,E>>* AVLTree<K,E>::insert(binaryTreeNode<AVLTree
 		t->element.value = theDate.second;
 
 	}
-
-	t->element.height = max( height(t->leftChild), height(t->rightChild)) + 1;
 
 	return t;
 }
@@ -152,9 +148,9 @@ binaryTreeNode<AVLTreeElement<K,E>>* AVLTree<K,E>::erase(binaryTreeNode<AVLTreeE
 		return NULL;
 	if(p->element.key < t->element.key){//待删除节点在t的左子树中
 		t->leftChild = erase(t->leftChild,p);
-		if(height(t->rightChild) - height(t->leftChild) == 2){
+		if (getHeight(t->rightChild) - getHeight(t->leftChild) == 2) {
 			binaryTreeNode<AVLTreeElement<K,E>>* tr = t->rightChild;
-			if(height(tr->leftChild) > height(tr->rightChild))
+			if (getHeight(tr->leftChild) > getHeight(tr->rightChild))
 				t = RL_Rotation(t);
 			else
 				t = RR_Rotation(t);
@@ -163,9 +159,9 @@ binaryTreeNode<AVLTreeElement<K,E>>* AVLTree<K,E>::erase(binaryTreeNode<AVLTreeE
 	}
 	else if(p->element.key > t->element.key){//待删除节点在t的右子树中
 		t->rightChild = erase(t->rightChild,p);
-		if(height(t->leftChild) - height(t->rightChild) == 2){
+		if (getHeight(t->leftChild) - getHeight(t->rightChild) == 2) {
 			binaryTreeNode<AVLTreeElement<K,E>>* tl = t->leftChild;
-			if(height(tl->rightChild) > height(tl->leftChild))
+			if (getHeight(tl->rightChild) > getHeight(tl->leftChild))
 				t = LR_Rotation(t);
 			else
 				t = LL_Rotation(t);
@@ -173,7 +169,7 @@ binaryTreeNode<AVLTreeElement<K,E>>* AVLTree<K,E>::erase(binaryTreeNode<AVLTreeE
 	}
 	else{//t为待删除节点
 		if(t->leftChild && t->rightChild){//t左右孩子非空
-			if(height(t->leftChild) > height(t->rightChild)){//t左子树比右子树高
+			if (getHeight(t->leftChild) > getHeight(t->rightChild)) { //t左子树比右子树高
 				binaryTreeNode<AVLTreeElement<K,E>>* max = t->leftChild;
 				while(max->rightChild)//找出t左子树的最大节点
 					max = max->rightChild;
@@ -196,9 +192,7 @@ binaryTreeNode<AVLTreeElement<K,E>>* AVLTree<K,E>::erase(binaryTreeNode<AVLTreeE
 			delete tmp;
 		}
 	}
-	if (t)
-		t->element.height = max(height(t->leftChild), height(t->rightChild))
-				+ 1;
+
 	return t;
 }
 

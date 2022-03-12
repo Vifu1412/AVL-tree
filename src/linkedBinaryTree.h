@@ -29,11 +29,14 @@ class linkedBinaryTree : public binaryTree<binaryTreeNode<E> >
 
       bool empty() const {return 0 == treeSize ;}
       int size() const {return treeSize;}
-//      int getHeight(binaryTreeNode<E>*t);
+	void test() const {
+		std::cout << "test";
+	}
 //      bool isHBLT();
 //      bool isHBLT(binaryTreeNode<E>*);
 
    public://将核心函数封装得到的一组函数
+	int getHeight(binaryTreeNode<E>*t);
       void preOrderOutput() {preOrder(output); std::cout<<std::endl;}
       void inOrderOutput() {inOrder(output); std::cout<<std::endl;}
       void postOrderOutput() {postOrder(output);std::cout<<std::endl;}

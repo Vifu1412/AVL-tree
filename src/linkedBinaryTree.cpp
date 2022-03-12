@@ -101,16 +101,16 @@ linkedBinaryTree<E>& linkedBinaryTree<E>::operator=(const linkedBinaryTree<E> & 
 //   left.treeSize = right.treeSize = 0;
 //}
 
-//template<class E>
-//int linkedBinaryTree<E> ::getHeight(binaryTreeNode<E>*t){
-//
-//	if(t==NULL){
-//		return 0;
-//	}
-//	int leftHeight = getHeight(t->leftChild)+1;
-//	int rightHeight = getHeight(t->rightChild)+1;
-//	return leftHeight<rightHeight?rightHeight:leftHeight;
-//}
+template<class E>
+int linkedBinaryTree<E>::getHeight(binaryTreeNode<E>*t) {
+
+	if (t == NULL) {
+		return 0;
+	}
+	int leftHeight = getHeight(t->leftChild) + 1;
+	int rightHeight = getHeight(t->rightChild) + 1;
+	return leftHeight < rightHeight ? rightHeight : leftHeight;
+}
 //template<class E>
 //bool linkedBinaryTree<E>::isHBLT(){
 //	return isHBLT(this->root);

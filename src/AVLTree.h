@@ -16,12 +16,12 @@ template<class K,class E>
 struct AVLTreeElement{
 	K key;
 	E value;
-	int height;
 };
 
 template<class K,class E>
 std::ostream& operator<<(std::ostream& out,const AVLTreeElement<K,E>& x){
-	out <<x.key<<":"<<x.value<<":"<<x.height<<"|";
+//	out <<x.key<<":"<<x.value<<":"<<x.height<<"|";
+	out << x.key << ":" << x.value << "|";
 	return out;
 }
 
@@ -38,12 +38,12 @@ public:
 	void erase(const K& theKey);
 	//bsTree 的方法
 	void ascend();
+	int getHeight(binaryTreeNode<AVLTreeElement<K, E>>*t);
 
-//	int height();
+
 
 private:
 	int max(int a,int b);
-	int height(binaryTreeNode<AVLTreeElement<K,E>>*t);
 	binaryTreeNode<AVLTreeElement<K,E>>* erase(binaryTreeNode<AVLTreeElement<K,E>>*t,binaryTreeNode<AVLTreeElement<K,E>>*p);
 	binaryTreeNode<AVLTreeElement<K,E>>* insert(binaryTreeNode<AVLTreeElement<K,E>>*t,const std::pair<const K,E>& thePair);
 	binaryTreeNode<AVLTreeElement<K,E>>* LL_Rotation(binaryTreeNode<AVLTreeElement<K,E>>*t);
